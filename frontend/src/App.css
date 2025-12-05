@@ -45,12 +45,33 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   width: 100%;
+  align-items: stretch;
 }
 
-.stock-price-section,
+.stock-price-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .stock-chart-section {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.stock-price-section > * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stock-chart-section > :last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 @media (max-width: 1024px) {

@@ -45,24 +45,10 @@ export function Recommendation({ recommendation, loading, error }: Recommendatio
     }
   };
 
-  const getRecommendationBgColor = () => {
-    switch (recommendation.recommendation) {
-      case 'BUY':
-        return '#dcfce7';
-      case 'SELL':
-        return '#fee2e2';
-      case 'HOLD':
-        return '#fef3c7';
-      default:
-        return '#f3f4f6';
-    }
-  };
-
   return (
     <div className="recommendation-container">
       <div
         className="recommendation-header"
-        style={{ backgroundColor: getRecommendationBgColor() }}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="recommendation-main">
