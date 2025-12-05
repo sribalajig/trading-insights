@@ -2,6 +2,8 @@ import YahooFinance from 'yahoo-finance2';
 import { IYahooFinanceClient } from './IYahooFinanceClient';
 import { TickerSearchResult } from '../models/TickerSearchResult';
 import { StockQuote } from '../models/StockQuote';
+import { HistoricalData } from '../models/HistoricalData';
+import { HistoricalDataPoint } from '../models/HistoricalDataPoint';
 
 export class YahooFinanceClient implements IYahooFinanceClient {
   private yahooFinance: InstanceType<typeof YahooFinance>;
@@ -60,6 +62,33 @@ export class YahooFinanceClient implements IYahooFinanceClient {
     } catch (error) {
       console.error('Error fetching quote from Yahoo Finance:', error);
       throw new Error(`Failed to fetch quote for ${symbol}`);
+    }
+  }
+
+  async getHistoricalData(symbol: string, period1: Date, period2: Date): Promise<HistoricalData> {
+    try {
+      const historical: any = await this.yahooFinance.historical(symbol, {
+        period1: Math.floor(period1.getTime() / 1000),
+        period2: Math.floor(period2.getTime() / 1000),
+        interval: '1d',
+      });
+
+      const dataPoints: HistoricalDataPoint[] = historical.map((item: any) => ({
+        date: new Date(item.date),
+        open: item.open,
+        high: item.high,
+        low: item.low,
+        close: item.close,
+        volume: item.volume || 0,
+      }));
+
+      return {
+        symbol,
+        data: dataPoints,
+      };
+    } catch (error) {
+      console.error('Error fetching historical data from Yahoo Finance:', error);
+      throw new Error(`Failed to fetch historical data for ${symbol}`);
     }
   }
 }

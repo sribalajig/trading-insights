@@ -25,5 +25,35 @@ export class StockController {
       });
     }
   }
+
+  async getHistory(req: Request, res: Response): Promise<void> {
+    try {
+      const symbol = req.params.symbol;
+      const range = req.query.range as string;
+
+      if (!symbol) {
+        res.status(400).json({ 
+          error: 'Symbol parameter is required' 
+        });
+        return;
+      }
+
+      if (!range) {
+        res.status(400).json({ 
+          error: 'Range query parameter is required (1w, 1m, 6m, 1y)' 
+        });
+        return;
+      }
+
+      const historicalData = await this.stockService.getHistoricalData(symbol, range);
+      res.json(historicalData);
+    } catch (error) {
+      console.error('StockController error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch historical data',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
 }
 

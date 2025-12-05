@@ -34,9 +34,28 @@
 
 .app-content {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.stock-details-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+.stock-price-section,
+.stock-chart-section {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1024px) {
+  .stock-details-container {
+    grid-template-columns: 1fr;
+  }
 }
 

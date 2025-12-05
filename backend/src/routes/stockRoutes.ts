@@ -15,5 +15,10 @@ router.get('/stocks/:symbol/latest', (req, res) => {
   stockController.getLatestPrice(req, res);
 });
 
+// GET /stocks/:symbol/history?range=1w|1m|6m|1y
+router.get('/stocks/:symbol/history', (req, res) => {
+  stockController.getHistory(req, res);
+});
+
 export default router;
 
