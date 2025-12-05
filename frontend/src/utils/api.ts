@@ -1,6 +1,7 @@
 import { TickerSearchResult } from '../models/TickerSearchResult';
 import { StockQuote } from '../models/StockQuote';
 import { HistoricalData } from '../models/HistoricalData';
+import { Recommendation } from '../models/Recommendation';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -64,6 +65,26 @@ export async function getHistoricalData(symbol: string, range: string): Promise<
     return data;
   } catch (error) {
     console.error('Error fetching historical data:', error);
+    throw error;
+  }
+}
+
+export async function getRecommendation(symbol: string): Promise<Recommendation> {
+  if (!symbol || symbol.trim().length === 0) {
+    throw new Error('Symbol is required');
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/stocks/${encodeURIComponent(symbol)}/recommendation`);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data: Recommendation = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching recommendation:', error);
     throw error;
   }
 }

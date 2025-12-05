@@ -3,32 +3,39 @@ import { SearchBar } from './components/SearchBar';
 import { StockPrice } from './components/StockPrice';
 import { HistoricalChart } from './components/HistoricalChart';
 import { TimeRangeSelector } from './components/TimeRangeSelector';
+import { Recommendation } from './components/Recommendation';
 import { TickerSearchResult } from './models/TickerSearchResult';
 import { StockQuote } from './models/StockQuote';
 import { HistoricalData } from './models/HistoricalData';
-import { getStockQuote, getHistoricalData } from './utils/api';
+import { Recommendation as RecommendationType } from './models/Recommendation';
+import { getStockQuote, getHistoricalData, getRecommendation } from './utils/api';
 import './App.css';
 
 function App() {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [quote, setQuote] = useState<StockQuote | null>(null);
   const [historicalData, setHistoricalData] = useState<HistoricalData | null>(null);
+  const [recommendation, setRecommendation] = useState<RecommendationType | null>(null);
   const [selectedRange, setSelectedRange] = useState<string>('1m');
   const [loading, setLoading] = useState<boolean>(false);
   const [historicalLoading, setHistoricalLoading] = useState<boolean>(false);
+  const [recommendationLoading, setRecommendationLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [historicalError, setHistoricalError] = useState<string | null>(null);
+  const [recommendationError, setRecommendationError] = useState<string | null>(null);
 
   const handleSelectTicker = (ticker: TickerSearchResult) => {
     setSelectedSymbol(ticker.symbol);
     setError(null);
     setHistoricalError(null);
+    setRecommendationError(null);
   };
 
   useEffect(() => {
     if (!selectedSymbol) {
       setQuote(null);
       setHistoricalData(null);
+      setRecommendation(null);
       return;
     }
 
@@ -72,32 +79,62 @@ function App() {
     fetchHistorical();
   }, [selectedSymbol, selectedRange]);
 
+  useEffect(() => {
+    if (!selectedSymbol) {
+      setRecommendation(null);
+      return;
+    }
+
+    const fetchRecommendation = async () => {
+      setRecommendationLoading(true);
+      setRecommendationError(null);
+      try {
+        const rec = await getRecommendation(selectedSymbol);
+        setRecommendation(rec);
+      } catch (err) {
+        setRecommendationError(err instanceof Error ? err.message : 'Failed to fetch recommendation');
+        setRecommendation(null);
+      } finally {
+        setRecommendationLoading(false);
+      }
+    };
+
+    fetchRecommendation();
+  }, [selectedSymbol]);
+
   return (
     <div className="app">
       <main className="app-main">
         <div className="app-content">
           <SearchBar onSelectTicker={handleSelectTicker} />
           {selectedSymbol && (
-            <div className="stock-details-container">
-              <div className="stock-price-section">
-                <StockPrice 
-                  quote={quote || { symbol: selectedSymbol }} 
-                  loading={loading} 
-                  error={error} 
-                />
+            <>
+              <Recommendation 
+                recommendation={recommendation} 
+                loading={recommendationLoading} 
+                error={recommendationError} 
+              />
+              <div className="stock-details-container">
+                <div className="stock-price-section">
+                  <StockPrice 
+                    quote={quote || { symbol: selectedSymbol }} 
+                    loading={loading} 
+                    error={error} 
+                  />
+                </div>
+                <div className="stock-chart-section">
+                  <TimeRangeSelector 
+                    selectedRange={selectedRange} 
+                    onRangeChange={setSelectedRange} 
+                  />
+                  <HistoricalChart 
+                    data={historicalData} 
+                    loading={historicalLoading} 
+                    error={historicalError} 
+                  />
+                </div>
               </div>
-              <div className="stock-chart-section">
-                <TimeRangeSelector 
-                  selectedRange={selectedRange} 
-                  onRangeChange={setSelectedRange} 
-                />
-                <HistoricalChart 
-                  data={historicalData} 
-                  loading={historicalLoading} 
-                  error={historicalError} 
-                />
-              </div>
-            </div>
+            </>
           )}
         </div>
       </main>

@@ -1,0 +1,152 @@
+.recommendation-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.recommendation-header {
+  padding: 20px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.recommendation-header:hover {
+  opacity: 0.9;
+}
+
+.recommendation-main {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.recommendation-badge {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.recommendation-confidence {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+.recommendation-score {
+  font-size: 14px;
+  color: #888;
+}
+
+.recommendation-toggle {
+  font-size: 14px;
+  color: #666;
+  user-select: none;
+}
+
+.recommendation-loading,
+.recommendation-error {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+.recommendation-error {
+  color: #dc2626;
+}
+
+.recommendation-details {
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.recommendation-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 16px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.recommendation-scores {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scores-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.score-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.score-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.score-explanation {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
