@@ -27,6 +27,39 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
+.stock-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.add-to-watchlist-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2563eb;
+  background: white;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.add-to-watchlist-button:hover:not(:disabled) {
+  background: #2563eb;
+  color: white;
+}
+
+.add-to-watchlist-button:disabled,
+.add-to-watchlist-button.added {
+  background: #e5e7eb;
+  color: #6b7280;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
 .stock-symbol {
   font-size: 32px;
   font-weight: 700;

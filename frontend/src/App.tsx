@@ -4,6 +4,8 @@ import { StockPrice } from './components/StockPrice';
 import { HistoricalChart } from './components/HistoricalChart';
 import { TimeRangeSelector } from './components/TimeRangeSelector';
 import { Recommendation } from './components/Recommendation';
+import { Tabs } from './components/Tabs';
+import { Watchlist } from './components/Watchlist';
 import { TickerSearchResult } from './models/TickerSearchResult';
 import { StockQuote } from './models/StockQuote';
 import { HistoricalData } from './models/HistoricalData';
@@ -12,6 +14,7 @@ import { getStockQuote, getHistoricalData, getRecommendation } from './utils/api
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState<'search' | 'watchlist'>('search');
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [quote, setQuote] = useState<StockQuote | null>(null);
   const [historicalData, setHistoricalData] = useState<HistoricalData | null>(null);
@@ -26,6 +29,13 @@ function App() {
 
   const handleSelectTicker = (ticker: TickerSearchResult) => {
     setSelectedSymbol(ticker.symbol);
+    setError(null);
+    setHistoricalError(null);
+    setRecommendationError(null);
+  };
+
+  const handleSelectStockFromWatchlist = (symbol: string) => {
+    setSelectedSymbol(symbol);
     setError(null);
     setHistoricalError(null);
     setRecommendationError(null);
@@ -106,34 +116,75 @@ function App() {
     <div className="app">
       <main className="app-main">
         <div className="app-content">
-          <SearchBar onSelectTicker={handleSelectTicker} />
-          {selectedSymbol && (
+          <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
+          
+          {activeTab === 'search' && (
             <>
-              <Recommendation 
-                recommendation={recommendation} 
-                loading={recommendationLoading} 
-                error={recommendationError} 
-              />
-              <div className="stock-details-container">
-                <div className="stock-price-section">
-                  <StockPrice 
-                    quote={quote || { symbol: selectedSymbol }} 
-                    loading={loading} 
-                    error={error} 
+              <SearchBar onSelectTicker={handleSelectTicker} />
+              {selectedSymbol && (
+                <>
+                  <Recommendation 
+                    recommendation={recommendation} 
+                    loading={recommendationLoading} 
+                    error={recommendationError} 
                   />
-                </div>
-                <div className="stock-chart-section">
-                  <TimeRangeSelector 
-                    selectedRange={selectedRange} 
-                    onRangeChange={setSelectedRange} 
+                  <div className="stock-details-container">
+                    <div className="stock-price-section">
+                      <StockPrice 
+                        quote={quote || { symbol: selectedSymbol }} 
+                        loading={loading} 
+                        error={error} 
+                      />
+                    </div>
+                    <div className="stock-chart-section">
+                      <TimeRangeSelector 
+                        selectedRange={selectedRange} 
+                        onRangeChange={setSelectedRange} 
+                      />
+                      <HistoricalChart 
+                        data={historicalData} 
+                        loading={historicalLoading} 
+                        error={historicalError} 
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+
+          {activeTab === 'watchlist' && (
+            <>
+              <Watchlist key="watchlist" onSelectStock={handleSelectStockFromWatchlist} />
+              {selectedSymbol && (
+                <>
+                  <Recommendation 
+                    recommendation={recommendation} 
+                    loading={recommendationLoading} 
+                    error={recommendationError} 
                   />
-                  <HistoricalChart 
-                    data={historicalData} 
-                    loading={historicalLoading} 
-                    error={historicalError} 
-                  />
-                </div>
-              </div>
+                  <div className="stock-details-container">
+                    <div className="stock-price-section">
+                      <StockPrice 
+                        quote={quote || { symbol: selectedSymbol }} 
+                        loading={loading} 
+                        error={error} 
+                      />
+                    </div>
+                    <div className="stock-chart-section">
+                      <TimeRangeSelector 
+                        selectedRange={selectedRange} 
+                        onRangeChange={setSelectedRange} 
+                      />
+                      <HistoricalChart 
+                        data={historicalData} 
+                        loading={historicalLoading} 
+                        error={historicalError} 
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

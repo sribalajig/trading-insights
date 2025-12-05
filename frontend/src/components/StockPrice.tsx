@@ -1,5 +1,7 @@
 import { StockQuote } from '../models/StockQuote';
 import { formatCurrency, formatLargeCurrency, formatNumber, formatPercent } from '../utils/formatting';
+import { addToWatchlist, isInWatchlist } from '../utils/storage';
+import { useState, useEffect } from 'react';
 import './StockPrice.css';
 
 interface StockPriceProps {
@@ -9,6 +11,22 @@ interface StockPriceProps {
 }
 
 export function StockPrice({ quote, loading, error }: StockPriceProps) {
+  const [isAdded, setIsAdded] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  useEffect(() => {
+    setIsAdded(isInWatchlist(quote.symbol));
+  }, [quote.symbol]);
+
+  const handleAddToWatchlist = () => {
+    if (!isAdded) {
+      addToWatchlist(quote.symbol);
+      setIsAdded(true);
+      setShowFeedback(true);
+      setTimeout(() => setShowFeedback(false), 2000);
+    }
+  };
+
   if (loading) {
     return (
       <div className="stock-price-container">
@@ -34,11 +52,22 @@ export function StockPrice({ quote, loading, error }: StockPriceProps) {
   return (
     <div className="stock-price-container">
       <div className="stock-price-header">
-        <div className="stock-symbol">{quote.symbol}</div>
-        <div className="stock-name">{displayName}</div>
-        {quote.exchange && (
-          <div className="stock-exchange">{quote.exchange}</div>
-        )}
+        <div className="stock-header-top">
+          <div>
+            <div className="stock-symbol">{quote.symbol}</div>
+            <div className="stock-name">{displayName}</div>
+            {quote.exchange && (
+              <div className="stock-exchange">{quote.exchange}</div>
+            )}
+          </div>
+          <button
+            className={`add-to-watchlist-button ${isAdded ? 'added' : ''}`}
+            onClick={handleAddToWatchlist}
+            disabled={isAdded}
+          >
+            {showFeedback ? 'Added!' : isAdded ? 'In Watchlist' : 'Add to Watchlist'}
+          </button>
+        </div>
       </div>
 
       <div className="stock-price-main">
