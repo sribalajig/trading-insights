@@ -22,6 +22,11 @@ export function SearchBar({ onSelectTicker }: SearchBarProps) {
     onSelectTicker?.(ticker);
   };
 
+  const handleClear = () => {
+    setQuery('');
+    setShowResults(true);
+  };
+
   const displayName = (ticker: TickerSearchResult): string => {
     return ticker.longname || ticker.shortname || ticker.symbol;
   };
@@ -36,6 +41,16 @@ export function SearchBar({ onSelectTicker }: SearchBarProps) {
           value={query}
           onChange={handleInputChange}
         />
+        {query.length > 0 && !loading && (
+          <button
+            type="button"
+            className="search-clear-button"
+            onClick={handleClear}
+            aria-label="Clear search"
+          >
+            ×
+          </button>
+        )}
         {loading && <span className="search-loading">Loading...</span>}
       </div>
 

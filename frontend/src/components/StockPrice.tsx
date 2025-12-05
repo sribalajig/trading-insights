@@ -1,5 +1,5 @@
-import React from 'react';
 import { StockQuote } from '../models/StockQuote';
+import { formatCurrency, formatLargeCurrency, formatNumber, formatPercent } from '../utils/formatting';
 import './StockPrice.css';
 
 interface StockPriceProps {
@@ -30,25 +30,6 @@ export function StockPrice({ quote, loading, error }: StockPriceProps) {
   const change = quote.regularMarketChange || 0;
   const changePercent = quote.regularMarketChangePercent || 0;
   const priceColor = '#2563eb';
-
-  const formatCurrency = (value?: number, currency?: string) => {
-    if (value === undefined || value === null) return 'N/A';
-    const currencySymbol = currency === 'USD' ? '$' : currency || '$';
-    return `${currencySymbol}${value.toFixed(2)}`;
-  };
-
-  const formatNumber = (value?: number) => {
-    if (value === undefined || value === null) return 'N/A';
-    if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
-    if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
-    if (value >= 1e3) return `${(value / 1e3).toFixed(2)}K`;
-    return value.toFixed(2);
-  };
-
-  const formatPercent = (value: number) => {
-    const sign = value >= 0 ? '+' : '';
-    return `${sign}${value.toFixed(2)}%`;
-  };
 
   return (
     <div className="stock-price-container">
@@ -94,7 +75,7 @@ export function StockPrice({ quote, loading, error }: StockPriceProps) {
         <div className="metadata-row">
           <div className="metadata-item">
             <span className="metadata-label">Market Cap:</span>
-            <span className="metadata-value">{formatCurrency(quote.marketCap, quote.currency)}</span>
+            <span className="metadata-value">{formatLargeCurrency(quote.marketCap, quote.currency)}</span>
           </div>
           <div className="metadata-item">
             <span className="metadata-label">Volume:</span>
