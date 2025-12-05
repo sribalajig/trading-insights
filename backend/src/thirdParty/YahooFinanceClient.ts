@@ -15,7 +15,10 @@ export class YahooFinanceClient implements IYahooFinanceClient {
       
       const quotes = results?.quotes || [];
       
-      return quotes.map((quote: any) => ({
+      // Filter to only equity stocks (exclude options, indices, etc.)
+      const equityQuotes = quotes.filter((quote: any) => quote.quoteType === 'EQUITY');
+      
+      return equityQuotes.map((quote: any) => ({
         symbol: quote.symbol || '',
         shortname: quote.shortname,
         longname: quote.longname,
