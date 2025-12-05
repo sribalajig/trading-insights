@@ -13,7 +13,12 @@ app.use(express.static(join(__dirname, 'dist')));
 
 // Handle SPA routing - serve index.html for all routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
+  res.sendFile(join(__dirname, 'dist', 'index.html'), (err) => {
+    if (err) {
+      console.error('Error serving index.html:', err);
+      res.status(500).send('Error loading application');
+    }
+  });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
