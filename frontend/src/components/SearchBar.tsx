@@ -9,13 +9,16 @@ interface SearchBarProps {
 
 export function SearchBar({ onSelectTicker }: SearchBarProps) {
   const { query, results, loading, error, setQuery } = useDebouncedSearch(300);
+  const [showResults, setShowResults] = React.useState<boolean>(true);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    setShowResults(true);
   };
 
   const handleSelectTicker = (ticker: TickerSearchResult) => {
     setQuery(ticker.symbol);
+    setShowResults(false);
     onSelectTicker?.(ticker);
   };
 
@@ -42,7 +45,7 @@ export function SearchBar({ onSelectTicker }: SearchBarProps) {
         </div>
       )}
 
-      {results.length > 0 && query.length > 0 && (
+      {results.length > 0 && query.length > 0 && showResults && (
         <ul className="search-results">
           {results.map((ticker, index) => (
             <li

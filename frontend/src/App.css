@@ -32,3 +32,11 @@
   align-items: flex-start;
 }
 
+.app-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
